@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    #canvas {
+      /* width: 100%; */
+      /* height: 100%; */
+      background-color: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    var canvas = document.getElementById('canvas');
+    var content = canvas.getContext('2d'),
+      WIDTH = document.documentElement.clientWidth,
+      HEIGHT = document.documentElement.clientHeight;
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+    var para = {
+        num: 100,
+        color: false,
+        r: 0.9,
+        o: 0.09,
+        a: 1
+      },
+      color,
+      color2;
+    var round_para = [];
+
+
+    window.onmousemove = function (event) {
+      var mouseX = event.clientX,
+        mouseY = event.clientY;
+      round_para.push({
+        x: mouseX,
+        y: mouseY,
+        r: para.r,
+        o: 1
+      })
+    };
+
+    // if (para.color) {
+    //   color2 = para.color;
+   
+
+    // } else {
+      color = Math.random() * 360;
+    //   console.log(canvas.width, canvas.height);
+    // }
+
+    function animate() {
+      if (!para.color) {
+        color += 0.1;
+        color2 = 'hsl(' + color + ',100%,80%)';
+      }
+
+      content.clearRect(0, 0, WIDTH, HEIGHT);
+
+      for (var i = 0; i < round_para.length; i++) {
+        content.fillStyle = color2;
+        content.beginPath();
+        content.arc(round_para[i].x, round_para[i].y, round_para[i].r, 0, 2 * Math.PI, false);
+        content.closePath();
+        content.fill();
+        round_para[i].r += para.r;
+        round_para[i].o -= para.o;
+        if (round_para[i].o <= 0) {
+          round_para.splice(i, 1);
+          i--;
+        }
+      }
+      window.requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+
+</html>
