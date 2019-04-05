@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>svg时钟</title>
+  <link rel="stylesheet" href="./css.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .sv {
+      background: red;
+      width: 300px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #svg {
+      background-color: gold
+    }
+
+    .wrapper {
+      /* background-color: #000; */
+      width: 300px;
+      height: 300px;
+      position: relative;
+      top: -304px;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sv">
+    <svg class="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" width='300' height='300' id="svg">
+      <!-- 时钟的背景 -->
+      <circle cx='150' cy='150' r='96' fill='pink' stroke="#aaa" stroke-width='4'></circle>
+      <!-- 圆心 -->
+      <circle cx='150' cy='150' r='6' fill='#fff'></circle>
+      <!-- 12 -->
+      <circle cx='150' cy='60' r='4' fill='#fff'></circle>
+      <!-- 1 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(30,150,150)'></circle>
+      <!-- 2 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(60,150,150)'></circle>
+      <!-- 3 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(90,150,150)'></circle>
+      <!-- 4 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(120,150,150)'></circle>
+      <!-- 5 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(150,150,150)'></circle>
+      <!-- 6 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(180,150,150)'></circle>
+      <!-- 7 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(210,150,150)'></circle>
+      <!-- 8 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(240,150,150)'></circle>
+      <!-- 9 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(270,150,150)'></circle>
+      <!-- 10 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(300,150,150)'></circle>
+      <!-- 11 -->
+      <circle cx='150' cy='60' r='4' fill='#fff' transform='rotate(330,150,150)'></circle>
+
+      <!-- 秒针 -->
+      <line id="second" x1='150' y1='150' x2='150' y2='80' stroke='red' stroke-linecap='round'></line>
+      <!-- 分针 -->
+      <line id="minute" x1='150' y1='150' x2='150' y2='90' stroke='green' stroke-width='2' stroke-linecap='round'>
+      </line>
+      <!-- 时针 -->
+      <line id="hour" x1='150' y1='150' x2='150' y2='100' stroke='yellow' stroke-width='3' stroke-linecap='round'>
+      </line>
+
+      <!-- 数字 -->
+      <text font-size='10' x='144' y='75'>12</text>
+      <text font-size='10' x='228' y='154'>3</text>
+      <text font-size='10' x='147' y='234'>6</text>
+      <text font-size='10' x='66' y='154'>9</text>
+
+    </svg>
+  </div>
+  <div class="wrapper">
+  </div>
+
+  <script>
+    // 使用js 创建刻度表
+    function createKeDu() {
+      var svg = document.querySelector('.svg');
+      for (var i = 0; i < 60; i++) {
+        var deg = i * 6;
+        var kedu = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        kedu.setAttribute('x1', '150');
+        kedu.setAttribute('y1', '60');
+        kedu.setAttribute('x2', '150');
+        kedu.setAttribute('y2', '56');
+        kedu.setAttribute('stroke', '#000');
+        kedu.setAttribute('transform', 'rotate(' + deg + ' 150 150)');
+        // console.log(kedu);
+        svg.appendChild(kedu);
+      }
+    }
+
+    var second = document.getElementById('second');
+    // console.log(second);
+    var minute = document.getElementById('minute');
+    var hour = document.getElementById('hour');
+
+    var setTime = function () {
+      var nowTime = new Date();
+      var nowSec = nowTime.getSeconds();
+      var nowMin = nowTime.getMinutes();
+      var nowHour = nowTime.getHours();
+      var secdeg = nowSec * 6;
+      var mindeg = nowMin * 6 + nowSec / 60 * 6;
+      var hourdeg = nowHour * 30 + nowMin / 60 * 30;
+      // console.log(mindeg);
+      second.setAttribute('transform', 'rotate(' + secdeg + ' 150 150)')
+      minute.setAttribute('transform', 'rotate(' + mindeg + ' 150 150)')
+      hour.setAttribute('transform', 'rotate(' + hourdeg + ' 150 150)')
+    };
+    createKeDu();
+    setTime();
+    setInterval(setTime, 1000)
+  </script>
+</body>
+
+</html>
