@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .box{
+       width: 100px;
+       height: 100px;
+       background: red; 
+       /* 过度：时间，过度样式 */
+       /* 5秒时间内宽度变为500px，
+       3s时间内高度变为300px 后面的1s为执行延迟时间
+       3s时间内背景颜色变为蓝色 */
+       /* transition: 1s width,2s  1s height,3s 3s
+       background ; */
+       /* transition: 1s width,2s height; */
+       transition: 1s width;
+
+    }
+    /* .box:hover{
+         background:blue; 
+         width: 500px; 
+         height: 300px; 
+
+    } */
+      
+      
+    </style>
+</head>
+<body>
+    <div class="box" id="box"></div>
+
+    <script>
+    var oBox=document.getElementById("box");
+    // 鼠标点击就将宽度加上100px
+        oBox.onclick=function()
+        {
+            this.style.width=this.offsetWidth+100+
+            "px";
+            // this.style.height=this.offsetHeight+100+
+            // "px";
+        //利用TransitionEnd添加end方法，在Transition结束后执行
+        addEnd(oBox,end);
+
+        }
+        // addEnd(oBox,end);
+        function end(){
+            // alert("end");
+            this.style.width=this.offsetWidth+100+
+            "px";
+            // 移除end方法
+            removeEnd(this,end);
+        }
+        function addEnd(obj,fn)
+        {
+            obj.addEventListener('webkitTransitionEnd',fn,false);
+            obj.addEventListener('transitionend',fn,false);
+        }
+        function removeEnd(obj,fn)
+        {
+            obj.removeEventListener('webkitTransitionEnd',fn,false);
+            obj.removeEventListener('transitionend',fn,false);
+        }
+        
+    </script>
+</body>
+</html>

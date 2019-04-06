@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    body{
+        height: 400px;
+        border: 1px solid #000;
+    }
+    .box{
+        width: 100px;
+        height: 100px;
+        background: red;
+        margin: 10px;
+        /* 两秒钟的过度时间 */
+        transition: 5s;
+    }
+    /*.box:nth-of-type(1) 选择第一个class为box的元素  */
+    body:hover .box:nth-of-type(1){
+        
+        transform: translateX(100px) scale(0.5);
+    
+    }
+    /* 上下两个box的变换不一样，这是因为transfrom的执行
+    顺序是“从后面往前执行”。
+        第一个box是先缩放0.5倍，再往右边移动100px
+        第二个box是先往右边移动100px，再缩放0.5倍 
+        所以实际上只往右边移动了50px,移动的长度也被缩放了*/
+    body:hover .box:nth-of-type(2){
+        
+        transform: scale(0.5) translateX(100px) ;
+    
+    }
+    
+
+    </style>
+</head>
+<body>
+    <div class="box">111</div>
+    <div class="box">222</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    body{
+        height: 400px;
+        border: 1px solid #000;
+    }
+    .box{
+        width: 100px;
+        height: 100px;
+        background: red;
+        margin: 100px auto 0;
+        /* 两秒钟的过度时间 */
+        transition: 5s;
+        /* 改变中心点的位置为右边中心点 */
+        /* transform-origin: right; */
+        /* 改变中心点的位置为右上角 
+        注：可以用具体的px代替*/
+        transform-origin: right top;
+    }
+    body:hover .box{
+        /* rotate旋转  scale缩放 skew倾斜
+        时，都是围绕元素的中心点来变化，中心点的位置不变
+        注：是在为改变的情况下，默认的情况
+        注：围绕的点可以改变，用transform-origin*/
+        /* 注：如果需要用到不同的transfrom变化，
+        请写道一个transfrom内，否则会出错 */
+        transform: rotate(360deg) scale(2);
+        /* transform: scale(2); */
+        /* transform: skew(30deg,30deg); */
+    }
+    
+
+    </style>
+</head>
+<body>
+    <div class="box">111</div>
+</body>
+</html>
