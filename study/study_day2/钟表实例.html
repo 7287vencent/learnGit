@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style id="css">
+    #warp{
+        width: 200px;
+        height: 200px;
+        border: 2px solid #000;
+        margin: 100px auto;
+        border-radius: 50%;
+        /*相对的位置  */
+        position: relative;      
+    }
+    #warp ul{
+        margin: 0;
+        padding: 0;
+        height: 200px;
+        position: relative;
+        list-style: none;
+    }
+    #warp ul li{
+        width: 2px;
+        height: 6px;
+        background-color: #000;
+        position: absolute;
+        left: 100px;
+        top: 0;
+        /* 确认变化的基点，这句不可以少，否则li将会重合到一起 */
+        /* 这句不是很理解 */
+        -webkit-transform-origin:center 100px;
+    }
+    /* #warp ul li:nth-of-type(1)
+    {
+       
+    } */
+    /* 让li变化重1，开始，就能在正中心，否者会发生变化 */
+    #warp ul li:nth-of-type(5n+1){
+         height:12px; 
+         background-color:tomato;     
+    }
+    #hour{
+        width: 6px;
+        height: 45px;
+        background-color: #000;
+        position: absolute;
+        left: 97px;
+        top: 55px;
+        /* 确认变化的中心基点，这句不可以少 */
+        transform-origin: bottom;
+    }
+    #min{
+        width: 4px;
+        height: 65px;
+        background-color: #999;
+        position: absolute;
+        left: 98px;
+        top: 35px;
+        transform-origin: bottom;
+        
+    }
+    #sec{
+        width: 2px;
+        height: 80px;
+        background-color: red;
+        position: absolute;
+        left: 99px;
+        top: 20px;
+        transform-origin: bottom;
+
+    }
+    .ico{
+        width: 10px;
+        height: 10px;
+        background-color: #000;
+        position: absolute;
+        left: 95px;
+        top: 95px;
+    }
+    </style>
+</head>
+<body>
+    <div id="warp">
+        <ul id="list">
+            <!-- <li></li> -->
+            <!-- <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li> -->
+        </ul>
+        <div id="hour"></div>
+        <div id="min"></div>
+        <div id="sec"></div>
+        <div class="ico"></div>
+    </div>
+
+<script>
+    // 注：注意要加双引号
+    var oList=document.getElementById("list");
+    var oHour=document.getElementById("hour");
+    var oMin=document.getElementById("min");
+    var oSec=document.getElementById("sec");
+    var oCss=document.getElementById("css");
+    var aLi="";
+    var sCss="";
+    for(var i=0;i<60;i++)
+    {
+        // 只能写道一行当中，否者会出错，将不能运行。“不可以写道另外一行”
+        // 注：“注意下面的写法”
+        sCss+="#warp ul li:nth-of-type("+(i+1)+"){ -webkit-transform:rotate("+i*6+"deg);}";
+	    aLi+="<li></li>"
+    }
+    oList.innerHTML=aLi;
+    oCss.innerHTML+=sCss;
+    toTime();
+    // “每隔一秒钟就刷新一下toTime函数”
+    setInterval(toTime,1000);
+    function toTime(){
+        // 获取当前的时间
+        var oDate=new Date();
+        // 获取当前的时间：秒数
+        var iSec=oDate.getSeconds();
+        // 获取当前的时间：分数，加上的是秒数/60，方便分针及时改变“度数”
+        var iMin=oDate.getMinutes()+iSec/60;
+        //原理和上一条一样
+        var iHour=oDate.getHours()+iMin/60;
+        // 注：千万注意style的后面写法为“WebkitTransform”
+        // “要加上浏览器的内核，不加将会出错”
+        oSec.style.WebkitTransform="rotate("+iSec*6+"deg)";
+        oMin.style.WebkitTransform="rotate("+iMin*6+"deg)";
+        oHour.style.WebkitTransform="rotate("+iHour*30+"deg)";
+    };
+</script>
+
+</body>
+</html>
