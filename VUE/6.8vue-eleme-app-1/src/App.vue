@@ -15,7 +15,9 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view/>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -38,10 +40,10 @@ export default {
     this.$http
       .get("https://www.easy-mock.com/mock/5cfbc455dd5a8c3884bf48ea/vue/seller")
       .then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data.errno === 0) {
           this.seller = Object.assign({}, this.seller, res.data.data);
-          console.log(this.seller);
+          // console.log(this.seller);
         }
       })
       .catch(err => {
@@ -51,7 +53,7 @@ export default {
 };
 </script>
 
-<style lang="stylus" scope>
+<style lang="stylus">
 @import './common/stylus/mixin'
   .tab
     display flex
