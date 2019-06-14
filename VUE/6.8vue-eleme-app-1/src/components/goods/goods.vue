@@ -160,7 +160,7 @@ export default {
     },
     // 这个是 从 cartcontrol 中传出的事件
     addFood(target) {
-      console.log('addFood',target)
+      // console.log('addFood',target)
       this._drop(target)
     },
     selectMenu(index, event) {
