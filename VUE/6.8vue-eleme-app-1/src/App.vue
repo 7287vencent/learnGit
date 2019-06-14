@@ -60,6 +60,7 @@ export default {
     width 100%
     height 40px
     line-height 40px
+    border-bottom 1px solid rgba(7, 17, 27, 0.1)
     border-1px(rgba(7, 17, 27, .1))
     .tab-item
       flex 1
@@ -68,7 +69,8 @@ export default {
         display block
         font-size 14px
         color rgb(77, 85, 93)
+        text-decoration none
         &.active
-          color rgb(240, 20 20)
+          color rgb(240, 20, 20)
 </style>
 

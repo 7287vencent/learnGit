@@ -34,7 +34,7 @@
                   </div>
                   <!-- 点击添加的组件 现在没有写 -->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food"></cartcontrol>
+                    <cartcontrol @add="addFood" :food="food"></cartcontrol>
                   </div>
                 </div>
               </li>
@@ -42,6 +42,9 @@
           </li>
         </ul>
       </div>
+      <shopcart ref="shopcart" 
+      :selectFoods="selectFoods" 
+      :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
     </div>
   </div>
 </template>
@@ -49,6 +52,7 @@
 <script>
   import BScroll from 'better-scroll'
   import cartcontrol from '../cartcontrol/cartcontrol'
+  import shopcart from '../shopcart/shopcart'
 export default {
   props: {
     seller: {
@@ -58,12 +62,32 @@ export default {
   data() {
     return {
       goods: [],
-      listHeight: []
+      listHeight: [],
+      selectedFood: {},
+      scrollY: 0
     }
   },
   computed: {
     currentIndex() {
-      
+      for (let i = 0; i < this.listHeight.length; i++) {
+        let height1 = this.listHeight[i]
+        let height2 = this.listHeight[i + 1]
+        if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+          return i
+        }
+      }
+    },
+    // 这个计算属性是 把所有 购买的 food 数据返回，返回的数据 会给到 shopcart
+    selectFoods() {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   mounted() {
@@ -75,7 +99,7 @@ export default {
      
   },
   beforeUpdate() {
-    console.log(this.goods)   
+    // console.log(this.goods)   
   },
   created() {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
@@ -115,7 +139,7 @@ export default {
         click: true,
         probeType: 3
       })
-
+      // 绝对是一个 监听事件 监听页面的滑动，然后设置 scrollY 的值
       this.foodsScroll.on('scroll',(pos) => {
         this.scrollY = Math.abs(Math.round(pos.y))
       })
@@ -130,15 +154,40 @@ export default {
         this.listHeight.push(height)
       }
     },
-    selectMenu() {
-
+    _drop(target) {
+      // 优化体验,异步执行下落的动画
+      // this.$refs.shopcart.drop(target)
     },
-    selectFood() {
-
+    // 这个是 从 cartcontrol 中传出的事件
+    addFood(target) {
+      console.log('addFood',target)
+      this._drop(target)
+    },
+    selectMenu(index, event) {
+      if (!event._constructed) {
+        return
+      }
+      let foodList = this.$refs.foodList
+      let el = foodList[index]
+      // console.log(foodList)
+      // console.log(el)
+      // 优秀
+      // foodsScroll 是 创建的一个 better-scroll 的一个实例  右边的
+      // 就
+      this.foodsScroll.scrollToElement(el, 300)
+    },
+    selectFood(food, event) {
+      if(!event._constructed) {
+        return
+      }
+      // 把点击的那个商品 赋值给 selectedFood
+      this.selectedFood = food 
+      // this.$refs.food.show()
     }
   },
   components: {
-    cartcontrol
+    cartcontrol,
+    shopcart
   }
 }
 </script>
