@@ -156,7 +156,7 @@ export default {
     },
     _drop(target) {
       // 优化体验,异步执行下落的动画
-      // this.$refs.shopcart.drop(target)
+      this.$refs.shopcart.drop(target)
     },
     // 这个是 从 cartcontrol 中传出的事件
     addFood(target) {
@@ -182,7 +182,7 @@ export default {
       }
       // 把点击的那个商品 赋值给 selectedFood
       this.selectedFood = food 
-      // this.$refs.food.show()
+      this.$refs.food.show()
     }
   },
   components: {

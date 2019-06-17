@@ -42,7 +42,7 @@
             <h1 class="title">购物车</h1>
             <span class="empty" @click="empty">清空</span>
           </div>
-          <!-- 这个 盒子 未在页面上显示出效果 -->
+          <!-- 这个 盒子 未在页面上显示出效果 是用来和父组件交互用的 -->
           <div class="list-content" ref="listContent">
             <ul>
               <li class="food" v-for="food in selectFoods">
@@ -60,6 +60,9 @@
         </div>
       </transition>
     </div>
+    <transition name="fade">
+      <div class="list-mask" @click="hideList" v-show="listShow"></div>
+    </transition>
   </div>
 </template>
 
@@ -158,7 +161,12 @@ export default {
       if(show) {
         this.$nextTick(() => {
           if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.listContent)
+            this.scroll = new BScroll(this.$refs.listContent,{
+              click: true
+            })
+          } else {
+            // refresh 重新计算 better-scroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常。
+            this.scroll.refresh()
           }
         })
       }
@@ -171,6 +179,9 @@ export default {
         return
       }
       this.fold = !this.fold
+    },
+    hideList() {
+      this.fold = true
     },
     pay() {
       if (this.totalPrice < this.minPrice) {
@@ -185,20 +196,63 @@ export default {
     },
     addFood(target) {
       this.drop(target)
+      console.log('addFood',target)
     },
-    drop() {
-
+    drop(el) {
+      for (let i = 0; i < this.balls.length; i++){
+        let ball = this.balls[i]
+        if(!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBalls.push(ball)
+          return
+        }
+      }
+      console.log("查看dropBalls",this.dropBalls)
     },
+    // 掉落之前的效果
     beforeDrop(el) {
-      console.log(el)
+      // console.log("beforeDrop",el)
+      let count = this.balls.length
+      while(count--) {
+        let ball = this.balls[count]
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect()
+          // console.log('rect',rect)
+          let x = rect.left - 32
+          let y = -(window.innerHeight - rect.top - 22)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          el.style.transform = `translate3d(0,${y}px,0)`
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)` 
+          inner.style.transform = `translate3d(${x}px,0,0)`
+        }
+      }
     },
     // el 是 触发的那个 DOM 元素
     // done 是回调函数
     dropping(el,done) {
-
+      // console.log('dropping',el,done)
+      let rf = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = `translate3d(0,0,0,)`
+        el.style.transform = `translate3d(0,0,0)`
+        let inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform=`translate3d(0,0,0,)`
+        inner.style.transform = `translate3d(0,0,0)`
+        // 分割一下
+        // 添加一个事件监听
+        el.addEventListener('transitionend',done)
+      })
     },
     afterDrop(el) {
-
+      // console.log('afterDrop',el)
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
     }
   },
   components: {
@@ -207,7 +261,12 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+// <style lang="stylus">
+//   @import './shopcart.styl'
+// </style>
+
+
+ <style lang="stylus" scoped>
   @import '../../common/stylus/mixin'
   
   .shopcart
@@ -305,7 +364,7 @@ export default {
         transition all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
         .inner
           width 16px
-          height 
+          height 16px
           border-radius 50%
           background rgb(0, 160, 220)
           transition all 0.4s linear 
@@ -360,6 +419,21 @@ export default {
             position absolute
             right 0
             bottom 6px
+  .list-mask
+    position fixed
+    top 0
+    left 0
+    width 100%
+    height 100%
+    z-index 40
+    backdrop-filter blur(10px)
+    opacity 1
+    background rgba(7,17,27,0.6)
+    &.fade-enter-active, &.fade-leave-active
+      transition all 0.5s
+    &.fade-enter, &.fade-leave-active
+      opacity 0
+      background rgba(7,17,27,0)
 </style>
 
 
