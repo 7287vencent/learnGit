@@ -46,6 +46,7 @@
       :selectFoods="selectFoods" 
       :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
     </div>
+    <food @add="addFood" :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -53,6 +54,7 @@
   import BScroll from 'better-scroll'
   import cartcontrol from '../cartcontrol/cartcontrol'
   import shopcart from '../shopcart/shopcart'
+  import food from '../food/food'
 export default {
   props: {
     seller: {
@@ -141,6 +143,8 @@ export default {
       })
       // 绝对是一个 监听事件 监听页面的滑动，然后设置 scrollY 的值
       this.foodsScroll.on('scroll',(pos) => {
+        // 0.1 +0.2 != 0.3 在js中
+        // 使用 math.abs()就可以保证0.1+0.2=0.3
         this.scrollY = Math.abs(Math.round(pos.y))
       })
     },
@@ -180,6 +184,7 @@ export default {
       if(!event._constructed) {
         return
       }
+      console.log('selectFood')
       // 把点击的那个商品 赋值给 selectedFood
       this.selectedFood = food 
       this.$refs.food.show()
@@ -187,7 +192,8 @@ export default {
   },
   components: {
     cartcontrol,
-    shopcart
+    shopcart,
+    food
   }
 }
 </script>
