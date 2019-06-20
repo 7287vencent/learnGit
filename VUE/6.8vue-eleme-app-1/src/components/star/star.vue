@@ -1,6 +1,6 @@
 <template>
   <div class="star" :class="starType">
-    <span v-for="(itemClass, index) in itemClasses" :class="itemClass" class="star-item" key="index"></span>
+    <span v-for="(itemClass, index) in itemClasses" :class="itemClass" class="star-item" :key="index"></span>
   </div>
 </template> 
 
@@ -20,12 +20,13 @@ export default {
     }
   },
   computed: {
+    // 是用来 判断 星星显示 的大小 样式
     starType() {
       return 'star-' + this.size
     },
     itemClasses() {
       let result = []
-      // 保证 score 的小数位 只能是 .5
+      // 只有 score 小数位 .5 以上时 就 加半个星星
       let score = Math.floor(this.score * 2) / 2
       // 判断是否有小数位 有的话就 添加一半的星星
       let hasDecimal = score % 1 !== 0
