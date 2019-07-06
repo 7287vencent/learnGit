@@ -27,7 +27,7 @@ export class list extends Component {
     // console.log('list111',todoList)
     return (
     <div>
-      <form onSubmit={this.handelsubmit}>
+      <form action="#" onSubmit={this.handelsubmit}>
           <input type="text" ref={node => this.inputNode = node}/>
           <button type="submit">
             addTo
